@@ -1,0 +1,192 @@
+
+import java.util.Scanner;
+import java.util.*;
+import java.io.*;
+
+public class OrdArray {
+   private int[] a;                 // ref to array a
+   private int nElems;               // number of data items
+   
+//-----------------------------------------------------------
+   public OrdArray(int max) {          // constructor
+     a = new int[max];             // create array
+     nElems = 0;
+   }
+//-----------------------------------------------------------
+   
+   public int size() { 
+     return nElems; 
+   }
+   //-----------------------------------------------------------
+   
+   public int find(int searchKey) {
+     int lowerBound = 0;
+     int upperBound = nElems-1;
+     int curIn;
+     
+     while(true) {
+       curIn = (lowerBound + upperBound ) / 2;
+       if (a[curIn]==searchKey)
+         return curIn;              // found it
+       else if (lowerBound > upperBound)
+         return nElems;             // can't find it
+       else {                         // divide range
+         if (a[curIn] < searchKey)
+           lowerBound = curIn + 1; // it's in upper half
+         else
+           upperBound = curIn - 1; // it's in lower half
+       }  // end else divide range
+     }  // end while
+   }  // end find()
+   
+   //-----------------------------------------------------------
+   public void insert(int value) {   // put element into array
+      int j;
+      for (j=0; j<nElems; j++)        // find where it goes
+        if (a[j] > value)            // (linear search)
+        break;
+      for (int k=nElems; k>j; k--)    // move bigger ones up
+         a[k] = a[k-1];
+      a[j] = value;                  // insert it
+      nElems++;                      // increment size
+   }  // end insert()
+   
+   //-----------------------------------------------------------
+   public boolean delete(int value) {
+      int j = find(value);
+      if (j==nElems)                  // can't find it
+         return false;
+      else                           // found it
+         {
+         for(int k=j; k<nElems; k++) // move bigger ones down
+            a[k] = a[k+1];
+         nElems--;                   // decrement size
+         return true;
+         }
+      }  // end delete()
+   
+   //-----------------------------------------------------------
+   public void display() {             // displays array contents
+      for (int j=0; j<nElems; j++)       // for each element,
+        System.out.print(a[j] + " ");  // display it
+      System.out.println("");
+   }
+   
+   @Override
+   public String toString() {
+	   StringBuilder sb = new StringBuilder();
+	   for (int i=0; i<nElems; i++){
+		   sb.append(a[i]+" ");
+	   }
+	   return sb.toString();
+   }
+   //-----------------------------------------------------------
+   
+	public int[] merge(OrdArray arr) {
+		// YOUR CODES
+		OrdArray third = new OrdArray(arr.nElems+nElems);
+		
+		for(int i=0; i<nElems;i++) {
+			third.insert(a[i]);
+		}
+		
+		for(int i=0; i<arr.nElems;i++) {
+			third.insert(arr.a[i]);
+		}
+		
+		
+		return third.a;
+	}
+
+	public int[] addTwo(int target) {
+		// YOUR CODES
+		int begin= 0;
+		int end = nElems-1;
+		int[] indexes= new int[2];
+		int dummy[]= {-1,-1};
+		
+		while(begin<end) {
+			int sum = a[begin]+a[end];
+			if(sum==target) {
+				indexes[0]=begin;
+				indexes[1]=end;
+				
+				break;
+			} else if( sum<target) {
+				begin++;
+			}
+			else {
+				end--;
+			}
+			
+		}
+		if(indexes[0]==0 && indexes[1]==0) {
+		return dummy; 
+		}
+		else {
+			return indexes;
+		}
+		
+		// For compilation, you need to change it.
+	}
+   
+   public static void main(String[] args){
+     // YOUR CODES to test the merge() method.
+	   
+	 // The following are the codes to test the addTwo() method
+	   
+	 OrdArray arr  = new OrdArray(50);
+	 arr.insert(12);
+	 arr.insert(10);
+	 arr.insert(24);
+	 arr.insert(0);
+	 arr.insert(6);
+	 arr.insert(5);
+	 arr.insert(7);
+	 arr.insert(2);
+	 arr.display();
+	 
+	 //Creating two ordered arrays
+//	 int[] secondarr= {2,4,6,8,10,10};
+	 
+	 OrdArray firstarr = new OrdArray(50);
+	 firstarr.insert(1);
+	 firstarr.insert(3);
+	 firstarr.insert(5);
+	 firstarr.insert(5);
+	 firstarr.insert(7);
+	 firstarr.insert(11);
+	 firstarr.insert(9);
+	 
+//	 firstarr.display();
+	
+
+	 OrdArray secondarr = new OrdArray(50);
+	 secondarr.insert(2);
+	 secondarr.insert(6);
+	 secondarr.insert(8);
+	 secondarr.insert(4);
+	 secondarr.insert(10);
+	 secondarr.insert(10);
+	 
+	 System.out.println(Arrays.toString(secondarr.merge(firstarr)));
+
+//	 secondarr.display();
+	 
+	 
+	
+	
+	 
+	 
+	
+//	 arr.merge(firstarr);
+	 
+	 
+	 Scanner console = new Scanner(System.in);
+	 System.out.print("Please enter a target number: ");
+	 int target = console.nextInt();
+	 System.out.println("The two elements that can add up to " + target + " are at indexes: " + Arrays.toString(arr.addTwo(target)));
+	 console.close();
+   }
+   
+}  // end class OrdArray
