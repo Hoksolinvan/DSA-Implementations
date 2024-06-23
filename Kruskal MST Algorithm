@@ -1,0 +1,342 @@
+import java.util.*;
+
+public class Graph {
+	private final int MAX_VERTS = 20;
+	private final int INFINITY = 1000000;
+	public Vertex vertexList[]; // list of vertices
+	private int adjMat[][]; // adjacency matrix
+	private int nVerts; // current number of vertices
+	
+	//private int currentVert;
+	//private int nTree; // number of verts in tree
+	// -------------------------------------------------------------
+	
+	static class Vertex {
+		public char label; // label (e.g. 'A')
+		public boolean isInTree;
+
+		// -------------------------------------------------------------
+		public Vertex(char lab) // constructor
+		{
+			label = lab;
+			isInTree = false;
+		}
+		// -------------------------------------------------------------
+	} // end class Vertex
+
+	static class Edge implements Comparable<Edge> {
+		public int srcVert; // index of a vertex starting edge
+		public int destVert; // index of a vertex ending edge
+		public int distance; // distance from src to dest
+		// -------------------------------------------------------------
+
+		public Edge(int sv, int dv, int d) // constructor
+		{
+			srcVert = sv;
+			destVert = dv;
+			distance = d;
+		}
+		// -------------------------------------------------------------
+		
+		public int compareTo(Edge that){
+			if (this.distance<that.distance) return -1;
+			else if (this.distance==that.distance) return 0;
+			else return 1;
+		}
+		
+		public String toString(){
+			return "(" + srcVert + "->" + destVert + ":" + distance + ")"; 
+		}
+	} // end class Edge
+		////////////////////////////////////////////////////////////////
+	
+	public Graph() // constructor
+	{
+		vertexList = new Vertex[MAX_VERTS];
+		// adjacency matrix
+		adjMat = new int[MAX_VERTS][MAX_VERTS];
+		nVerts = 0;
+		for (int j = 0; j < MAX_VERTS; j++) // set adjacency
+			for (int k = 0; k < MAX_VERTS; k++) // matrix to 0
+				adjMat[j][k] = INFINITY;
+	} // end constructor
+		// -------------------------------------------------------------
+	
+	public void addVertex(char lab) {
+		vertexList[nVerts++] = new Vertex(lab);
+	}
+
+	// -------------------------------------------------------------
+	public void addEdge_undirected(int start, int end, int weight) {
+		adjMat[start][end] = weight;
+		adjMat[end][start] = weight;
+	}
+
+	//------------------------------------------------
+	public void addEdge_directed(int start, int end, int weight) {
+		adjMat[start][end] = weight;
+	}
+	// -------------------------------------------------------------
+	public void displayVertex(int v) {
+		System.out.print(vertexList[v].label);
+	}
+	
+	
+	public Queue<Edge> kruskalMST(){
+		int counter=0;
+		double weight = 0; // weight of MST
+		Queue<Edge> mst = new LinkedList<Edge>(); // edges in MST
+		
+		PriorityQueue<Edge> second = new PriorityQueue<>();
+		// YOUR CODES
+		
+		//First we organize the values 
+		for(int i=0; i<nVerts;i++) {
+			
+			for(int j=i+1; j<nVerts;j++) {
+				Edge placeholder = new Edge(i,j,adjMat[i][j]);
+				
+//				System.out.println(second.peek());
+				
+				if(!second.isEmpty() && (second.peek().srcVert==placeholder.destVert) && (second.peek().destVert==placeholder.srcVert)) {
+					
+				}
+				
+				else if(adjMat[i][j]!=0 && placeholder.distance!=1000000) {
+					
+				second.add(placeholder);
+				counter++;
+				}
+				
+			
+				
+			}
+		}
+		
+		
+		UnionFind p = new UnionFind(nVerts);
+		
+		while(!second.isEmpty()) {
+			Edge container =second.poll();
+			
+			if(p.find(container.srcVert)!=p.find(container.destVert)) {
+				
+		
+			mst.add(container);
+			p.union(container.srcVert, container.destVert);
+			}
+			
+//			n++;
+		}
+		
+//		while(!mst.isEmpty()) {
+//			String src="";
+//			String destin="";
+//			Edge placeholder2 = mst.poll();
+//		
+//			if(placeholder2.srcVert==0) {
+//				src="a";
+//			}
+//			else if(placeholder2.srcVert==1)
+//				src="b";
+//			else if(placeholder2.srcVert==2)
+//				src="c";
+//			else if(placeholder2.srcVert==3)
+//				src="d";
+//			else if(placeholder2.srcVert==4)
+//				src="e";
+//			else
+//				src="f";
+//			
+//			
+//			if(placeholder2.destVert==0) {
+//				destin="a";
+//			}
+//			else if(placeholder2.destVert==1)
+//				destin="b";
+//			else if(placeholder2.destVert==2)
+//				destin="c";
+//			else if(placeholder2.destVert==3)
+//				destin="d";
+//			else if(placeholder2.destVert==4)
+//				destin="e";
+//			else
+//				destin="f";
+//			
+//			
+//			System.out.println(src+"----"+destin+": "+placeholder2.distance);
+//				
+//				
+//			
+//			
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
+		return mst;
+	}
+	
+	public String[] bellman_ford(int source){
+		int[] distance = new int[nVerts];
+		int[] parent = new int[nVerts];
+		String[] shortestPaths = new String[nVerts];
+		
+		boolean flag=false;
+		Arrays.fill(distance, Integer.MAX_VALUE);
+		
+		distance[source]=0;
+		parent[source]=0;
+		
+		
+		
+		Queue<Edge> second = new LinkedList<>();
+		
+		for(int i=0; i<nVerts;i++) {
+			
+			for(int j=0; j<nVerts;j++) {
+				
+				Edge placeholder = new Edge(i,j,adjMat[i][j]);
+				
+//				System.out.println(second.peek());
+				
+				 if(adjMat[i][j]!=0 && placeholder.distance!=1000000) {
+					
+				second.add(placeholder);
+				
+				}
+				
+			
+				
+			}
+		}
+		
+		
+		for(int i=0; i<nVerts-1;i++) {
+			
+			for(Edge place: second) {
+				if(distance[place.destVert]>=distance[place.srcVert]+place.distance) {
+					distance[place.destVert]=distance[place.srcVert]+place.distance;
+							parent[place.destVert]=place.srcVert;
+				}
+				
+			}
+			
+	
+			
+		}
+		
+		System.out.println(Arrays.toString(distance));
+		System.out.println(Arrays.toString(parent));
+
+		
+//		
+//		for(Edge place: second) {
+//			
+//			if(distance[place.destVert]>distance[place.srcVert]+place.distance) {
+//				flag=false;
+//			}
+//			
+//			flag=true;
+//		}
+//		
+		
+		
+		// YOUR CODES
+		// Please specify your String format in the String[] to be the following:
+		// a->b:a->c->b:1
+		// a->c:a->c:3
+		// a->d:a->c->b->d:2
+		
+		
+		
+		
+		
+		return shortestPaths;
+	}
+	
+	public int[][] floyd_warshall(){
+		int[][] distance = new int[nVerts][nVerts];
+		// YOUR CODES
+		// Please specify your results as a 2D matrix as shown in the HW problem statement.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return distance;
+	}
+
+	public static void main(String[] args) {
+		// Problem 1
+		Graph theGraph1 = new Graph();
+		theGraph1.addVertex('a'); // 0 (start for mst)
+		theGraph1.addVertex('b'); // 1
+		theGraph1.addVertex('c'); // 2
+		theGraph1.addVertex('d'); // 3
+		theGraph1.addVertex('e'); // 4
+		theGraph1.addVertex('f'); // 5
+
+		theGraph1.addEdge_undirected(0, 1, 6); // ab 6
+		theGraph1.addEdge_undirected(0, 4, 4); // ae 4
+		theGraph1.addEdge_undirected(1, 2, 10); //bc 10
+		theGraph1.addEdge_undirected(1, 4, 7); // be 7
+		theGraph1.addEdge_undirected(1, 5, 7); // bf 7
+		theGraph1.addEdge_undirected(2, 3, 6); // cd 6
+		theGraph1.addEdge_undirected(2, 4, 8); // ce 8
+		theGraph1.addEdge_undirected(2, 5, 5); // cf 5
+		theGraph1.addEdge_undirected(3, 5, 7); // df 7
+		theGraph1.addEdge_undirected(4, 5, 12); // ef 12
+
+		System.out.println("Minimum spanning tree: ");
+		theGraph1.kruskalMST(); // minimum spanning tree
+		System.out.println();
+		
+		// Problem 2
+		Graph theGraph2 = new Graph();
+		theGraph2.addVertex('a'); // 0
+		theGraph2.addVertex('b'); // 1
+		theGraph2.addVertex('c'); // 2
+		theGraph2.addVertex('d'); // 3
+		theGraph2.addVertex('e'); // 4
+
+		theGraph2.addEdge_directed(0, 1, 2); // ab 2
+		theGraph2.addEdge_directed(0, 2, 3); // ac 3
+		theGraph2.addEdge_directed(1, 3, 1); // bd 1
+		theGraph2.addEdge_directed(2, 1, -1); //cb -1
+		theGraph2.addEdge_directed(2, 4, 1); // ce 1
+		theGraph2.addEdge_directed(4, 3, 5); // cd 5
+		
+		System.out.println("Single-source Shortest Paths: ");
+		theGraph2.bellman_ford(0); // shortest paths
+		System.out.println();
+		
+		Graph theGraph3 = new Graph();
+		theGraph3.addVertex('1'); // 0 (start for mst)
+		theGraph3.addVertex('2'); // 1
+		theGraph3.addVertex('3'); // 2
+		theGraph3.addVertex('4'); // 3
+		
+		theGraph3.addEdge_directed(0, 1, 8); // '1-2' 8
+		theGraph3.addEdge_directed(0, 3, 1); // '1-4' 1
+		theGraph3.addEdge_directed(1, 2, 1); // '2-1' 1
+		theGraph3.addEdge_directed(2, 0, 4); // '3-1' 4 
+		theGraph3.addEdge_directed(3, 1, 2); // '4-2' 2
+		theGraph3.addEdge_directed(3, 2, 9); // '4-3' 9
+		
+		System.out.println("All Pairs Shortest Paths: ");
+		theGraph3.floyd_warshall();
+		System.out.println();
+	}
+} // end class Graph
+	////////////////////////////////////////////////////////////////
