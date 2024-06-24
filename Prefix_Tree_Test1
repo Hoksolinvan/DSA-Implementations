@@ -1,0 +1,290 @@
+/*
+ * Name: Hoksolinvan Chhun
+ */
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class PrefixTree {
+	
+	private Node root;
+
+	public static class Node {
+		
+		//Van's note: I made changes to the instance variable by making them "static"
+		private	 char	character;
+		private 	Node left;
+		private	 Node	right;
+
+		public void displayNode()      // display ourself
+		{
+			System.out.print(character + " ");
+		}
+	}
+	
+	public static class Encode {
+		private char character;
+		private String encodes;
+		
+		
+		
+		public Encode(char character, String encodes) {
+			// For example:  new Encode('a', "0");
+			this.character = character;
+			this.encodes = encodes;
+		}
+		
+		public char getCharacter(){
+			return this.character;	
+		}
+		
+		public String getEncode() {
+			return this.encodes;
+		}
+		
+		public String toString() {
+			return this.character + "\t" + this.encodes.length() + "\t" + this.encodes;
+		}
+	}
+	
+	
+	
+	
+	//Displays the tree
+	public void displayTree() {
+		Queue<Node> q = new LinkedList<Node>();
+		q.add(root);
+		while (!q.isEmpty()){
+			Node current = q.poll();
+			current.displayNode();
+			if (current.left!=null) {
+				System.out.print(current.character + " " + "Left: " + current.left.character + "\t");
+				q.add(current.left);
+			}
+			else {
+				System.out.print(current.character + " " + "Left:NULL" + "\t");
+			}
+			if (current.right!=null) {
+				System.out.print(current.character + " " + "Right: " + current.right.character + "\n");
+				q.add(current.right);
+			}
+			else {
+				System.out.println(current.character + " " + "Right:NULL");
+			}
+		}
+		System.out.println();
+	}
+	
+	
+	
+	
+	// Constructor. First read the file and then build the Prefix Tree
+	public PrefixTree() throws FileNotFoundException { 
+		// test case of values 
+		///Users/iamvan/Desktop/Suffolk /4th semester/Intro to Algorithm and Data Structure/Homework/homework8/abra.pre
+		File file = new File("abra.pre");
+		Scanner input = new Scanner(file);
+		String line = input.nextLine().trim();		
+		char[] characters = line.toCharArray();
+		this.root = buildTree(characters, 0);
+		input.close();
+	}
+	
+	
+	
+	
+	
+	// Build the Prefix Tree
+	private Node buildTree(char[] chars, int currentIndex) {
+		if(currentIndex==chars.length) {
+			return null;
+		}
+		
+		char currentChar=chars[currentIndex];
+		Node node = new Node();
+		node.character = currentChar;
+		
+		if (currentChar == '*') {
+			node.left=buildTree(chars, currentIndex+1);
+			int leftChildrenCount = getSize(node.left);
+			node.right=buildTree(chars, currentIndex+leftChildrenCount+1);
+		}
+		return node;
+	}
+	
+	
+	
+	
+	
+	// the nodes in the subtree rooted at the node argument.
+	private int getSize(Node node){
+		if (node==null) { 
+			return 0;
+		}
+		
+		
+		else {
+			return getSize(node.left) + getSize(node.right)+1;
+		}
+	}
+	
+	/*
+	 * @param none
+	 * @return an ArrayList of Encode object.
+	 * @will find out and return the encoding (a string representing a sequence of bits) for each character on the leaf node.
+	 * @Equivalent to finding all the paths (concatenating the '0' or '1' along the path) to each leaf node.
+	 */
+	
+	
+	public ArrayList<Encode> getEncodes() {
+		// YOUR CODES
+		
+		System.out.println("character  bits  encoding");
+		System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
+		
+		ArrayList<Encode> container = new ArrayList<>();
+		StringBuilder appe = new StringBuilder();
+		
+		 getEncodes(container,root,appe);
+		
+		 for(int i=0; i<container.size();i++) {
+			 System.out.println(container.get(i));
+		 }
+		 System.out.println("");
+		 
+		 return container;
+		
+		 
+	}
+	
+	public void getEncodes(ArrayList<Encode> contains,Node root,StringBuilder appender){
+
+		if(root==null) {
+			return;
+		}
+		
+
+		if(root.left==null && root.right==null) {
+			
+			contains.add(new Encode(root.character,appender.toString()));
+
+			return;
+		}
+		
+		
+		
+		
+		if(root.left!=null) {
+			appender.append("0");
+			getEncodes(contains, root.left,appender);
+			
+			appender.deleteCharAt(appender.length()-1);
+
+		}
+		
+		if(root.right!=null) {
+			appender.append("1");
+			getEncodes(contains,root.right,appender);
+		
+			appender.deleteCharAt(appender.length()-1);
+
+		}
+		
+
+	}
+	
+	
+
+	// uncompress the message and compute for the compression ratio.
+	// print corresponding message
+	// return the compression ratio.
+	public double uncompress(String compressedMsg) {
+		// YOUR CODES
+		
+		//modifying variables
+		
+		StringBuilder uncompressedMsg= new StringBuilder();		
+		Node current=root;
+		int i=0;
+		int p=0;
+			
+			if(root==null) {
+				return 0;
+			}
+			
+			
+			while(i<compressedMsg.length()) {
+				
+				
+			 if(compressedMsg.charAt(i)=='0') {
+				current=current.left;
+				i++;
+				
+				if(current.left==null && current.right==null) {
+					uncompressedMsg.append(current.character);
+					current=root;
+					
+				}
+				
+			}
+			 
+			else {
+
+				current=current.right;
+				i++;
+				
+				if(current.left==null && current.right==null) {
+					uncompressedMsg.append(current.character);
+					current=root;
+				}
+				
+			}
+			 
+			}
+
+			int original=compressedMsg.length();
+			int pseudo = uncompressedMsg.length();
+			
+			
+			double compressionfactor=(original*0.1/(pseudo*8))*1000;
+			
+			
+			
+			double d= Math.round(compressionfactor*100)/100.0;
+//			System.out.println(d);
+//			System.out.println(""compressionfactor);
+//			System.out.printf("%.3f",compressionfactor);
+			
+//			double result= Math.round(compressionfactor * 100.0)/100.0;
+//			System.out.println("");
+//			System.out.println(result);
+			
+		System.out.println(uncompressedMsg);
+		System.out.println("Number of bits = "+compressedMsg.length());
+		System.out.println("Number of characters = "+uncompressedMsg.length());
+		return d; // for compilation. You need to change it.
+	}
+	
+	
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		PrefixTree theTree = new PrefixTree();
+		
+		theTree.displayTree();
+		
+		System.out.println(theTree.getEncodes());
+			
+		File file = new File("abra.pre");   //read the second line
+		Scanner input = new Scanner(file);
+		input.nextLine();
+		String msg = input.nextLine().trim();
+		input.close();
+		
+		System.out.println("The compression ratio is: " + theTree.uncompress(msg));
+	}
+}
