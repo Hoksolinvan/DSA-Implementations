@@ -1,0 +1,217 @@
+/*
+ * Author: Hoksolinvan Chhun
+ * Due Date: Feb 12,2023
+ * This program has a moving average
+ */
+
+
+//Time Complexity O(N)
+
+
+
+package hw3;
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class MovingAverage {
+	private QueueX queue;
+	private int size;
+	private long sum=0;
+	
+	/** Initialize your data structure here. */
+	
+
+	
+	
+	public MovingAverage(int size) {//
+		this.queue = new QueueX();
+		this.size = size;
+		
+	}
+	
+	
+	
+	
+
+	
+	
+	// checks sum, size and average of the queue
+	public double next(int val) {
+		
+		queue.enqueue(val);
+		double totaller=0;
+		
+		sum=0;
+		
+		if(queue.size()>size) {
+			queue.dequeue();
+			
+		}
+		
+		for(int i=0;i<queue.size();i++) {
+			
+			
+			int container = queue.dequeue();
+			sum+=container;
+			queue.enqueue(container);
+			
+			
+			
+		}
+		
+		totaller=(double)sum/queue.size();
+		
+
+		
+		
+		
+		
+	
+		return totaller; // for compilation. You need to change it.
+    }
+
+	
+	
+	
+	// DO NOT CHANGE THE MAIN METHOD
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		System.out.print("Please enter a number to specify the window size: ");
+		
+		int window = input.nextInt();
+		
+		MovingAverage m = new MovingAverage(window);
+
+		ArrayList<Double> arrList = new ArrayList<Double>();
+		
+		for (int i = 0; i < window+5; i++) {
+			System.out.print("Please enter a number to be added into the window: ");
+			int num = input.nextInt();
+			double avg = m.next(num);
+			System.out.println("The average after adding the above number is: " + avg);
+			arrList.add(avg);
+		}
+		input.close();
+		System.out.println("Averages in the sequence are: " + arrList);
+	}
+	
+	
+	
+}
+
+//class QueueX {
+//private int MAX = 10000;
+//private int maxSize;
+//private int[] queArray;
+//private int front;
+//private int rear;
+//private int nItems;
+//
+//// --------------------------------------------------------------
+//public QueueX() // constructor
+//{
+//	maxSize = MAX;
+//	queArray = new int[maxSize];
+//	front = 0;
+//	rear = -1;
+//	nItems = 0;
+//}
+//
+//public QueueX(int size) {
+//	maxSize = size;
+//	queArray = new int[maxSize];
+//	front = 0;
+//	rear = -1;
+//	nItems = 0;
+//}
+//
+//// --------------------------------------------------------------
+//public void enqueue(int j) // put item at rear of queue
+//{
+//	if (isFull())  // a fixed capacity Queue.
+//		throw new IllegalStateException("Queue is full"); 
+//	
+//	if (rear == maxSize - 1) // deal with wraparound
+//		rear = -1;
+//	queArray[++rear] = j; // increment rear and enqueue
+//	nItems++; // one more item
+//}
+//
+//// --------------------------------------------------------------
+//public int dequeue() // take item from front of queue
+//{
+//	if (isEmpty())
+//		throw new IllegalStateException("Queue is empty");
+//	
+//	int temp = queArray[front++]; // get value and incr front
+//	if (front == maxSize) // deal with wraparound
+//		front = 0;
+//	nItems--; // one less item
+//	return temp;
+//}
+//
+//// --------------------------------------------------------------
+//public int peekFront() // peek at front of queue
+//{
+//	return queArray[front];
+//}
+//
+//// --------------------------------------------------------------
+//public boolean isEmpty() // true if queue is empty
+//{
+//	return (nItems == 0);
+//}
+//
+//// --------------------------------------------------------------
+//public boolean isFull() // true if queue is full
+//{
+//	return (nItems == maxSize);
+//}
+//
+//// --------------------------------------------------------------
+//public int size() // number of items in queue
+//{
+//	return nItems;
+//}
+//
+//public void display() {	
+//	if (front<=rear) {
+//		for (int i = front; i <=rear; i++) {
+//			System.out.print(queArray[i] + " ");
+//		}
+//		System.out.println();
+//	} else {
+//		for (int i = front; i < maxSize; i++) {
+//			System.out.print(queArray[i] + " ");
+//		}
+//		for (int i=0; i<=rear; i++){
+//			System.out.print(queArray[i] + " ");
+//		}
+//		System.out.println();
+//	}
+//}
+//
+//
+//
+//@Override
+//public String toString() {
+//	String s = "";
+//	if (front<=rear) {
+//		for (int i = front; i <=rear; i++) {
+//			s+=queArray[i]+" ";
+//		}
+//	} else {
+//		for (int i = front; i < maxSize; i++) {
+//			s+=queArray[i]+" ";
+//		}
+//		for (int i=0; i<=rear; i++){
+//			s+=queArray[i]+" ";
+//		}
+//	}
+//	return s.trim();
+//}
+//}
+
+
