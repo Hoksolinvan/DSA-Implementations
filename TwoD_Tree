@@ -1,0 +1,237 @@
+import java.util.*;
+import java.io.*;
+
+public class TwoDTree {
+	private static Node root; // root of the KdTree
+
+	static class Point2D {
+		double x;
+		double y;
+
+		public Point2D(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	// 2d-tree (generalization of a BST in 2d) representation.
+	static class Node {
+		private Point2D p; // the point
+		private Node left; // the left/bottom subtree
+		private Node right; // the right/top subtree
+
+		// Construct a node given the point
+		Node(Point2D p) {
+			this.p = p;
+		}
+	}
+
+	public TwoDTree() {
+		
+		root = null;
+		
+		
+		
+	}
+	
+	
+	public static void insert(Point2D p) {
+		
+		boolean flag=false;
+		
+//		System.out.println(p);
+		root = insert(root,p,flag);
+		
+		
+		// YOUR CODES
+	}
+	
+	public static Node insert(Node node, Point2D pp, boolean flag) {
+		
+		if(node==null) {
+			Node firstnode = new Node(pp);
+			node=firstnode;
+			return node;
+		}
+		
+		if(flag==false) {
+			if(pp.x<node.p.x) {
+				boolean flagg=true;
+				node.left=insert(node.left, pp,flagg);
+			}
+			else {
+				boolean flagg=true;
+				node.right=insert(node.right, pp,flagg);
+			}	
+		}
+		else {
+			if(pp.y<node.p.y) {
+				boolean flagg=false;
+				node.left=insert(node.left, pp,flagg);
+			}
+			else {
+				boolean flagg=false;
+				node.right=insert(node.right, pp,flagg);
+			}	
+		}
+		
+		
+		
+		return node;
+		
+	}
+
+	public static boolean search(Point2D p) {
+		
+		boolean flag=false;
+		
+		// YOUR CODES
+		return search(root,p,flag); // for compilation. you need to change it.
+	}
+	
+	public static boolean search(Node node,Point2D p,boolean flag) {
+		
+		
+		if(node==null) {
+			return false;
+		}
+		
+		if(p.x==node.p.x && node.p.y==p.y) {
+			
+			return true;
+		}
+		
+		
+			
+			if(flag==false) {
+				if(p.x<node.p.x) {
+				boolean flagg=true;
+				return search(node.left,p,flagg);
+			}
+			else {
+				boolean flagg=true;
+				return search(node.right,p,flagg);
+			}	
+			
+			
+		}
+			else {
+				if(p.y<node.p.y) {
+					boolean flagg=false;
+					return search(node.left,p,flagg);
+				}
+				else {
+					boolean flagg=false;
+					return search(node.right,p,flagg);
+				}
+				
+			}
+			
+			
+		
+		
+		
+	}
+
+	public static void display() {
+		
+		// YOUR CODES
+		 display(root);
+		
+	}
+	
+	public static void display(Node node) {
+		
+		if(node==null) {
+			return;
+		}
+		
+		Queue<Node> container = new LinkedList();
+		
+		container.add(node);
+		
+		while(!container.isEmpty()) {
+			
+			Node current= container.poll();
+			
+			System.out.println("("+current.p.x+", "+current.p.y+")");
+			
+			if(current.left!=null) {
+				container.add(current.left);
+			}
+			if(current.right!=null) {
+				container.add(current.right);
+			}
+		}
+		
+	}
+
+	public static void main(String[] args) throws Exception {
+		
+		
+		File p = new File("/Users/iamvan/Desktop/Suffolk /4th semester/Intro to Algorithm and Data Structure/Homework/homework8/input10k.txt");
+		
+		Scanner input = new Scanner(p);
+		
+		int counter=0;
+
+		System.out.println("The first 10 points: \n");
+	
+		while(input.hasNextLine()) {
+			
+			
+			
+			//There is an exception problem on line 186 but I don't know how to fix the issue
+			Double xvalue = Double.parseDouble(input.next());
+			Double yvalue = Double.parseDouble(input.next());
+			
+			
+			
+			//For debugging//
+//			if(counter<10) {
+//				System.out.printf("("+xvalue+", "+yvalue+")");
+//				counter++;
+//			}
+			//////
+			
+			Point2D newpoint = new Point2D(xvalue, yvalue);
+			insert(newpoint);
+			
+			
+		
+		}
+		input.close();
+		
+		
+		//Test case:
+//		Point2D newpoint = new Point2D(0.3,0.4);
+//		insert(newpoint);
+		
+		//Display is working as intended, test case: because there was nothing inputted therefore no value was displayed.
+		System.out.println("Level-order tree traversal representation: \n");
+		display();
+		System.out.println("");
+		
+		
+		System.out.println("The status of the point existing is: " + search(new Point2D(0.717763,0.206316)));
+//		System.out.println("The status of the point existing is: " + search(new Point2D(6332,42)));
+		
+		
+		// 1. YOUR CODES to Read file and build the tree by insertion
+		
+		// 2. Display the TwoDTree in Level-Order
+		// 3. Search for some arbitrary points.
+		
+		
+		
+		
+		
+		
+	}
+
+
+
+
+
+	
+}
