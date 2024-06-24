@@ -1,0 +1,64 @@
+
+import java.util.ArrayList;
+
+public class Permutations {
+	public static ArrayList<String> getAllPermutations(char[] a, int k){
+		// YOUR CODES
+		
+		
+		ArrayList<String> container= new ArrayList();
+	
+		
+		getStringsRec(container, a,"", k);
+		
+		return container; // For compilation. You need to change it.
+	}
+	
+	
+	public static void getStringsRec(ArrayList<String> list, char[] chars, String prefix, int k) {
+		
+		
+		
+		//base case
+		if(k==0) {
+			
+			list.add(prefix);
+			return;
+			
+		}
+		
+		
+		//recursive case
+		else {
+		
+			for(int i=0;i<chars.length;i++) {
+				
+				String prefixx= prefix+chars[i];
+				int counter=k-1;
+				
+				getStringsRec(list,chars,prefixx,counter);
+			
+
+				
+				
+			}
+			
+		}
+		
+		
+			
+			
+		}
+		
+		
+		
+		
+	
+	
+	
+
+	public static void main(String[] args) {
+		char[] a = {'a', 'b', 'c', 'd'};
+		System.out.println("All Permutations: " + getAllPermutations(a, 2));
+	}
+}
