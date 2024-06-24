@@ -1,0 +1,110 @@
+
+public class Min_PriorityQueue {
+	// array in sorted order, from max at 0 to min at size-1
+	private int maxSize;
+	private MinHeap theHeap;
+	private int nItems;
+	// -------------------------------------------------------------
+
+	public Min_PriorityQueue(int size) // constructor
+	{ // YOUR CODES
+		
+		this.maxSize=size;
+		theHeap = new MinHeap(this.maxSize);
+	
+	
+	}
+
+	// -------------------------------------------------------------
+	public void insert(int item) // insert item
+	{
+		// YOUR CODES
+		if(nItems==maxSize) {
+			System.out.println("The queue is full");
+		}
+		
+		theHeap.insert(item);
+		nItems++;
+		
+	} // end insert()
+
+	
+	
+	public int remove() // remove minimum item
+	{ // YOUR CODES
+		
+		if(nItems==0) {
+			//there is nothing to remove
+			System.out.println("The queue is empty");
+			return -1;
+		}
+		
+		nItems--;
+		return theHeap.remove().getKey(); // for compilation. you need to change it.
+	}
+
+	
+	
+	// -------------------------------------------------------------
+	public int peek() // peek at minimum item
+	{ // YOUR CODES
+		
+		
+		if(nItems==0) {
+			return -1;
+		}
+		
+		
+		Node p = new Node(theHeap.remove().getKey());
+		
+		
+		theHeap.insert(p.getKey());
+		int minimum = p.getKey();
+		
+		return minimum; // for compilation. You need to change it.
+	}
+
+	
+	// -------------------------------------------------------------
+	public boolean isEmpty() // true if queue is empty
+	{
+		// YOUR CODES
+		
+		return nItems==0; // for compilation. you need to change it.
+	}
+
+	
+	// -------------------------------------------------------------
+	public boolean isFull() // true if queue is full
+	{
+		// YOUR CODES
+		return nItems==maxSize; // for compilation. You need to change it.
+	}
+
+	
+	public static void main(String[] args) {
+		Min_PriorityQueue thePQ = new Min_PriorityQueue(5);
+
+//		System.out.println(thePQ.isEmpty()); CORRECT
+//		System.out.println(thePQ.isFull()); CORRECT
+//		System.out.println(thePQ.remove()); CORRECT
+//		System.out.println("The smallest value is" + thePQ.peek());  CORRECT
+
+
+
+		
+		thePQ.insert(30);
+		thePQ.insert(50);
+		thePQ.insert(10);
+		thePQ.insert(40);
+		thePQ.insert(20);
+		
+
+
+		while (!thePQ.isEmpty()) {
+			long item = thePQ.remove();
+			System.out.print(item + " "); // 10, 20, 30, 40, 50
+		}
+		System.out.println("");
+	} // end main()
+}
