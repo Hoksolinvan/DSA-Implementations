@@ -1,0 +1,136 @@
+import java.util.*;
+import java.io.*;
+
+public class WordIndex {
+	
+	
+	
+	/*
+	 * 
+	 * 
+	 * Read the file to create the hash table for word index.
+	 */
+	public static HashMap<String, ArrayList<Integer>> getWordIndex(Scanner o) throws Exception, FileNotFoundException {
+		// YOUR CODES
+		
+		HashMap<String, ArrayList<Integer>> placeholder = new HashMap<>();
+		
+		int linecounter=1;
+		
+
+		while(o.hasNextLine()) {	
+			
+			String currentline=o.nextLine();
+			Scanner p = new Scanner(currentline);
+			
+			while(p.hasNext()) {
+				
+				String key=p.next();
+				
+				if(placeholder.containsKey(key)) {
+					
+					ArrayList<Integer> pp = placeholder.get(key);
+					if(!pp.contains(linecounter)) {
+					pp.add(linecounter);
+					placeholder.replace(key, pp);
+					}
+				}
+				
+				else {
+					ArrayList<Integer> pp = new ArrayList<>();
+					pp.add(linecounter);
+					placeholder.put(key, pp);
+					
+					
+				}
+				
+			}
+			
+			linecounter++;
+			}
+		
+		
+		
+		
+		
+		
+		return placeholder; // For compilation. You need to change it.
+	}
+
+	/*
+	 * Read the file to create the hash table for word index with stop words removed.
+	 */
+	public static HashMap<String, ArrayList<Integer>> getWordIndexNoStopWords(Scanner o) throws Exception, FileNotFoundException {
+		// YOUR CODES
+		
+		HashMap<String,ArrayList<Integer>> firstplaceholder = new HashMap<>();
+		HashMap<String,ArrayList<Integer>> placeholder = new HashMap<>();
+		placeholder= getWordIndex(o);
+		
+		
+		
+		
+		File stopwords = new File("stopwords.txt");
+		Scanner input = new Scanner(stopwords);
+		
+		firstplaceholder.putAll(placeholder);
+		
+		
+		while(input.hasNextLine()) {
+			String key= input.next().toLowerCase();
+			
+			if(firstplaceholder.containsKey(key.toLowerCase())) {
+				
+				
+				firstplaceholder.remove(key);
+			}
+		}
+		
+		
+		
+		return firstplaceholder; // For compilation. You need to change it.
+	}
+	
+	
+	/*
+	 * Write the generated hash table to a file index.txt
+	 */
+	
+	public static void writeToFile(HashMap<String, ArrayList<Integer>> map) throws Exception {
+		// YOUR CODES
+		
+		
+		
+		File written = new File("index.txt");
+		boolean newfile = written.createNewFile();
+		FileWriter p = new FileWriter(written);
+		
+		if(newfile==true) {
+		p.write(map.toString());
+		p.close();
+		}
+		else {
+			System.out.println("Cannot create a new file");
+		}
+		
+	}
+	
+	public static void main(String[] args) throws Exception, FileNotFoundException {
+		// YOUR CODES to read and write files.
+		
+		File p = new File("Kennedy.txt");
+		Scanner input = new Scanner(p);
+		
+		
+		File pp = new File("stopwords.txt");
+		Scanner stopwords = new Scanner(pp);
+		
+		
+//		System.out.println(getWordIndex(input).get("as"));
+//		System.out.println(getWordIndexNoStopWords(input).get("victory"));
+		
+		System.out.println(getWordIndex(input).values());
+//		writeToFile(getWordIndexNoStopWords(input));
+//		writeToFile(getWordIndexNoStopWords(input));
+	}
+}
