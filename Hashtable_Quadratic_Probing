@@ -1,0 +1,286 @@
+import java.io.*;
+import java.util.*;
+
+public class HashTable_Quadratic {
+	private String[] hashArray; // array holds hash table
+	private int arraySize;
+	
+	
+	
+
+	// -------------------------------------------------------------
+	public HashTable_Quadratic(int size) // constructor
+	{
+		arraySize = size;
+		hashArray = new String[arraySize];
+	}
+
+	// -------------------------------------------------------------
+	public void displayTable() {
+		System.out.print("Table: ");
+		for (int j = 0; j < arraySize; j++) {
+			if (hashArray[j] != null)
+				System.out.print(hashArray[j] + " ");
+			else
+				System.out.print("** ");
+		}
+		System.out.println("");
+	}
+
+	@Override
+	public String toString() {
+		String result = "";
+		for (int j = 0; j < arraySize; j++) {
+			if (hashArray[j] != null)
+				result+=hashArray[j] + " ";
+			else
+				result+="**";
+		}
+		return result;
+	}
+	// -------------------------------------------------------------
+	public int hashFunc(String key) {
+		// YOUR CODES
+		int total=0;
+		
+		double exponent=0;
+		exponent=key.length();
+		
+		for(int i=0; i<key.length();i++) {
+			
+			if(Character.isLetter(key.charAt(i))) {
+				
+			int platform= (int)key.charAt(i);
+			
+			exponent=exponent-1;
+			int formula = platform * (int)Math.pow(26, exponent);
+
+			total+=formula;
+			
+			}
+		}
+	
+		
+		return total%arraySize; // For compilation. You need to change it.
+	}
+	
+	
+	
+	public int secondhashQuadraticprobing(int hashvalue, int svalue, String p) {
+		
+		
+		int newhashvalue;
+		newhashvalue = (hashvalue+(int)Math.pow(svalue,2))% arraySize;
+		
+		if(hashArray[newhashvalue]==null) {
+			
+			return 0;
+		}
+		
+		
+		if(hashArray[newhashvalue].equals(p)) {
+			return newhashvalue;
+		}
+		
+		else {
+			
+			return secondhashQuadraticprobing(newhashvalue,svalue + 1, p);
+			
+		}
+		
+		
+	}
+
+	
+	
+	
+	public int hashQuadraticprobing(int hashvalue, int svalue) {
+		
+		
+		int newhashvalue;
+		newhashvalue = (hashvalue+(int)Math.pow(svalue,2))% arraySize;
+		
+		
+		
+		if(hashArray[newhashvalue]==null) {
+			return newhashvalue;
+		}
+		else {
+			return hashQuadraticprobing(newhashvalue,svalue + 1);
+			
+		}
+		
+		
+	}
+	
+	
+	
+
+
+	
+	
+	// -------------------------------------------------------------
+	// Van's note: It is Correct!
+	public void insert(String item) // insert a DataItem
+	// (assumes table not full)
+	{ // YOUR CODES
+		
+		int j=hashFunc(item);
+		int p= j%arraySize;
+//		System.out.println(p);
+		
+		if(hashArray[p]==null && p<arraySize) {
+			
+			hashArray[p]=item;
+			
+		}
+		else {
+			
+			int z = hashQuadraticprobing(p,1);
+			hashArray[z]=item;
+			
+			
+		}
+		
+
+	} // end insert()
+		// -------------------------------------------------------------
+
+	
+	
+	
+	/* delete a key if exists and return that key.
+	 * Otherwise return null
+	 */
+	
+	//Van's note: It is Correct!
+	public String delete(String key) 
+	{ // YOUR CODES
+		
+		
+		if(key==null) {
+			return "The value trying to be deleted does not exist";
+		
+		
+		
+		}
+		
+		int j =hashFunc(key);
+		
+		int p = secondhashQuadraticprobing(j,1,key);
+			
+		
+		hashArray[p]="**";
+		
+		
+//		for(int i=p+1;i<arraySize-1;i++) {
+//			
+//			hashArray[i]=hashArray[i+1];
+//		}
+//		
+		
+//		arraySize--;
+		
+		
+		
+		return key;
+		// For compilation. You need to change it.
+
+	} 
+	
+	
+	// end delete()
+		// -------------------------------------------------------------
+
+	/* Return the key if exists. Otherwise return null
+	 */
+	//Van's note: It is Correct!
+	public String find(String key) // find item with key
+	{ // YOUR CODES
+//		for(int i=0; i<hashArray.length;i++) {
+//			if(hashArray[i].equals(key)) {
+//				return key;
+//				
+//			}
+//		}
+		int pp= hashFunc(key)%arraySize;
+		
+		if(hashArray[pp].equals(key)) {
+			return key;
+		}
+		else {
+			int index= secondhashQuadraticprobing(pp,1,key);
+			
+			 if(hashArray[index].equals(key)) {
+				return key;
+			}
+		}
+	
+		String p="There is no string here";
+		System.out.print(p);
+		return null;
+		
+		 // For compilation. You need to change it.
+	}
+
+	// -------------------------------------------------------------
+	// end class HashTable
+
+	public static void main(String[] args) throws IOException {
+		int aKey, size, n, keysPerCell;
+
+		// get the size of the HashTable
+		Scanner console = new Scanner(System.in);
+		System.out.print("Enter size of hash table: ");
+		size = console.nextInt();
+
+		// make the table
+		HashTable_Quadratic table = new HashTable_Quadratic(size);
+		table.insert("apple");
+		table.insert("book");
+		table.insert("car");
+		table.insert("dog");
+		table.insert("egg"); 
+		table.insert("fish");
+		table.insert("giraff");
+		table.insert("horse");
+		table.insert("ice");
+		table.insert("jungle");
+		System.out.println("___________________");
+		
+		
+//		System.out.println(table.find("apple"));
+//		System.out.println(table.find("book"));
+//		System.out.println(table.find("car"));
+//		System.out.println(table.find("dog"));
+//		System.out.println(table.find("egg"));
+//		System.out.println(table.find("fish"));
+//		System.out.println(table.find("giraff"));
+//		System.out.println(table.find("horse"));
+//		System.out.println(table.find("ice"));
+//		System.out.println(table.find("jungle"));
+//
+//		System.out.println(table.find("pp"));
+		
+		
+//		System.out.println(table.hashFunc("fish"));
+
+//		table.displayTable();
+//		
+//		table.delete("ice");
+//
+		
+	
+		System.out.println(table.hashFunc("apple"));
+		//46373805
+		System.out.println(table.hashFunc("ice"));
+		//1866826
+
+		System.out.println(table.find("banana"));
+		
+		
+
+		
+		
+	}
+}
