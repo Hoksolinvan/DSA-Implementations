@@ -1,0 +1,252 @@
+
+class Node {
+	private int iData; // data item (key)
+
+	public Node(int key) // constructor
+	{
+		iData = key;
+	}
+
+	public int getKey() {
+		return iData;
+	}
+
+	public void setKey(int id) {
+		iData = id;
+	}
+
+	public String toString() {
+		return this.iData + " ";
+	}
+}
+
+public class MinHeap {
+	private Node[] heapArray;
+	private int maxSize; // size of array
+	private int currentSize; // number of nodes in array
+
+	// -------------------------------------------------------------
+
+	public MinHeap(int mx) // constructor
+	{
+		maxSize = mx;
+		currentSize = 0;
+		heapArray = new Node[maxSize]; // create array
+	}
+
+	// -------------------------------------------------------------
+	public boolean isEmpty() {
+		return currentSize == 0;
+	}
+
+	// -------------------------------------------------------------
+	public boolean insert(int key) {// YOUR CODES
+		
+		
+		
+		if(currentSize==maxSize) {
+			return false;
+		}
+		
+		Node newnode = new Node(key);
+		
+		heapArray[currentSize] = newnode;
+		
+		
+		trickleUp(currentSize++);
+		
+		
+		return true; // For compilation. You need to change it.
+	}
+
+	// -------------------------------------------------------------
+	public void trickleUp(int index) {
+		int parent = (index - 1) / 2;
+		Node bottom = heapArray[index];
+
+		while (index > 0 && heapArray[parent].getKey() > bottom.getKey()) {
+
+			heapArray[index] = heapArray[parent];
+			index = parent;
+			parent = (parent - 1) / 2;
+		}
+
+		heapArray[index] = bottom;
+	}
+
+	// -------------------------------------------------------------
+	public Node remove() // delete item with max key. Return the reference to
+							// the deleted node.
+	{ // (assumes non-empty list)
+		// YOUR CODES
+		if(currentSize==0) {
+			return null;
+		}
+		
+		Node rootval = heapArray[0];
+		
+//		heapArray[0]=heapArray[currentSize-1];
+//		currentSize--;
+		
+		heapArray[0]=heapArray[currentSize-1];
+//		System.out.println("The largest value" + heapArray[(int)Math.floor(currentSize/2)].getKey());
+
+		currentSize--;
+		
+		
+	
+		trickleDown(0);
+	
+	
+		
+		
+		return rootval; // for compilation. you need to change it.
+
+	}
+	
+	
+	public Node remove2() // delete item with max key. Return the reference to
+	// the deleted node.
+{ 		
+
+			if(currentSize==0) {
+					return null;
+					//because there's nothing there
+				}
+			
+				int maxval = 0; //keeptrack of highest value
+				Node p = new Node(0); //return value
+				int maxindex= 0; //keeptrack of maxval index
+				
+				for(int i= currentSize/2; i<currentSize;i++) {
+//					System.out.println(maxval);
+					
+					if(maxval<heapArray[i].getKey()) {
+					maxval=heapArray[i].getKey();
+					p.setKey(heapArray[i].getKey());
+					maxindex=i;
+					}
+					
+				}
+				heapArray[maxindex].setKey(heapArray[currentSize-1].getKey());
+//				System.out.println(maxval);
+//				System.out.println(maxindex);
+//				System.out.println(heapArray[maxindex]);
+				currentSize--;
+				
+				int secondindex= (maxindex-1)/2;
+				
+				if(maxindex>0 && heapArray[maxindex].getKey()<heapArray[secondindex].getKey()) {
+					
+					trickleDown(maxindex);
+				}
+				else {
+					trickleUp(maxindex);
+				}
+
+
+
+				return p; // for compilation. you need to change it.
+
+}
+
+	// -------------------------------------------------------------
+	public void trickleDown(int index) {
+		Node top = heapArray[index];
+		int minChild;
+
+		while (index < currentSize / 2) { // while the node has at lease one
+											// child
+			int leftChild = 2 * index + 1;
+			int rightChild = leftChild + 1;
+
+			if (rightChild <= currentSize && heapArray[rightChild].getKey() > heapArray[leftChild].getKey()) {
+				minChild = leftChild;
+			} else
+				minChild = rightChild;
+
+			if (top.getKey() <= heapArray[minChild].getKey())
+				break;
+
+			heapArray[index] = heapArray[minChild];
+			index = minChild;
+		}
+
+		heapArray[index] = top;
+	}
+
+	// -------------------------------------------------------------
+	public void displayHeap() {
+		System.out.print("heapArray: "); // array format
+		for (int m = 0; m < currentSize; m++)
+			if (heapArray[m] != null)
+				System.out.print(heapArray[m].getKey() + " ");
+			else
+				System.out.print("-- ");
+		System.out.println();
+		// heap format
+		int nBlanks = 32;
+		int itemsPerRow = 1;
+		int column = 0;
+		int j = 0; // current item
+		String dots = "...............................";
+		System.out.println(dots + dots); // dotted top line
+
+		while (currentSize > 0) // for each heap item
+		{
+			if (column == 0) // first item in row?
+				for (int k = 0; k < nBlanks; k++) // preceding blanks
+					System.out.print(' ');
+			// display item
+			System.out.print(heapArray[j].getKey());
+
+			if (++j == currentSize) // done?
+				break;
+
+			if (++column == itemsPerRow) // end of row?
+			{
+				nBlanks /= 2; // half the blanks
+				itemsPerRow *= 2; // twice the items
+				column = 0; // start over on
+				System.out.println(); // new row
+			} else // next item on row
+				for (int k = 0; k < nBlanks * 2 - 2; k++)
+					System.out.print(' '); // interim blanks
+		} // end for
+		System.out.println("\n" + dots + dots); // dotted bottom line
+	} // end displayHeap()
+
+	public static void main(String[] args) throws Exception {
+		MinHeap theHeap = new MinHeap(31); // make a Heap; max size 31
+
+		
+		theHeap.insert(70); // insert 10 items
+		theHeap.insert(40);
+		theHeap.insert(50);
+		theHeap.insert(20);
+		theHeap.insert(60);
+		theHeap.insert(100);
+		theHeap.insert(80);
+		theHeap.insert(30);
+		theHeap.insert(10);
+		theHeap.insert(90);
+		
+
+		
+//		theHeap.remove();
+//		theHeap.displayHeap();
+		
+//		System.out.println(theHeap.remove());
+//		System.out.println(theHeap.remove());
+		
+//		theHeap.displayHeap();
+		
+		
+		
+		while (!theHeap.isEmpty()) {
+			Node node = theHeap.remove();
+			System.out.println(node.getKey());
+		}
+
+	} // end main()
+}
