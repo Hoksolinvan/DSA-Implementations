@@ -1,0 +1,210 @@
+
+package hw4;
+
+//Time complexity O(N)
+
+/*
+ * Author: Hoksolinvan Chhun
+ * Due Date: Feb, 20, 2023
+ * Purpose: This program creates a subvariant of the queue data structure called, "deque". 
+t is implemented using a doubly linked list. 
+
+Credit: I did my work independently without help from external sources
+
+ */
+
+
+public class Deque {
+	static class Link {
+		public int dData; // data item
+		public Link next; // next link in list
+		public Link previous; // previous link in list
+
+		public Link(int d) { // constructor
+			dData = d;
+			next = null;
+			previous = null;
+		}
+		
+		public void displayLink() { // display this link
+			System.out.print(dData + "");
+		}
+	} // end class Link
+
+	private Link first; // ref to first item
+	private Link last; // ref to last item
+	
+	// -------------------------------------------------------------
+	// constructor
+	public Deque() {
+		first = null; // no items on list yet
+		last = null;
+	}
+	
+	/*
+	 * insert at front of the deque
+	 * equivalent to insertFirst on a doubly linked list
+	 */
+	public void addFront(int dd) {
+		Link newLink = new Link(dd); // make new link
+		
+		if (isEmpty()) // if empty list,
+			last = newLink; // newLink <-- last
+		else {
+			first.previous = newLink; // newLink <-- old first
+		newLink.next = first; // newLink --> old first
+		 // first --> newLink
+		
+	}
+		first = newLink;
+
+	}
+	/* insert at end of the deque
+	 * equivalent to insertLast on a doubly linked list
+	 */
+	public void addRear(int dd) { 
+		// YOUR CODES
+		Link newlink = new Link(dd);
+		
+		if(isEmpty()) {
+			first=newlink;
+		}
+		
+		else {
+			
+			last.next= newlink;
+			newlink.previous=last;
+			
+		}
+		
+		last= newlink;
+		
+		
+		
+	}
+
+	/*
+	 * delete the first item
+	 * equivalent to deleteFirst on a doubly linked list
+	 */
+	public int removeFront() { 
+		// YOUR CODES
+		
+		if(isEmpty()) {
+		
+		return 0; 
+	
+		}
+		
+		else{
+			int container= first.dData;
+			first=first.next;
+			
+			first.previous=null;
+			
+			return container;// For compilation. You need to change it.
+		}
+	}
+
+	/*
+	 * delete the last item on the deque
+	 * equivalent to deleteLast on a doubly linked list
+	 */
+	public int removeRear() {
+		// YOUR CODES
+		
+	 if (isEmpty()) {
+        return -1;
+    } else {
+        int container = last.dData;
+        last = last.previous;
+        if (last == null) {
+            first = null;
+        } else {
+            last.next = null;
+        }
+        return container;
+    }
+	}
+
+	/* display items on the deque
+	 * 
+	 */
+	public void display() {
+		// YOUR CODES
+		// PLEASE DISPLAY YOUR DEQUE IN THE FOLLOWING FORMAT:
+		
+		
+		
+		System.out.print("[");
+    Link current = first;
+    while (current != null) {
+        current.displayLink();
+        if (current.next != null) {
+            System.out.print(", ");
+        }
+        current = current.next;
+    }
+    System.out.print("]");
+		
+		
+		
+		// i.e.: [1, 3, 5]
+	}
+
+	// -------------------------------------------------------------
+	public boolean isEmpty() { // true if no links //CORRECT//
+		// YOUR CODES
+		
+		if(first==null || last==null) {
+		
+		return true;
+		}
+		else{
+			return false;// for compilation
+		}
+		
+		
+		
+	}
+	//--------------------------------------------------------------
+	
+	public int size() { //CORRECT//
+		// YOUR CODES
+		 int counter = 0;
+    Link current = first;
+    while (current != null) {
+        counter++;
+        current = current.next;
+    }
+    return counter;// For compilation. You need to change it.
+	}
+	
+	
+	public static void main(String[] args) {
+		// YOUR CODES FOR TESTING.
+		
+		 Deque d = new Deque();
+		 //addFront(5), addFront(3), addFront(1)
+		 
+		 d.addFront(5);
+		 d.addFront(3);
+		 d.addFront(1);
+   
+
+		 d.display();
+    // d.addRear(4);
+    // d.addRear(8);
+    // d.addFront(0);
+    // d.addFront(10);
+    
+    
+    
+
+   
+    
+    
+   
+	}
+	
+}
