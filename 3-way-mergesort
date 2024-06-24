@@ -1,0 +1,245 @@
+import java.util.*;
+import java.io.*;
+
+class DArray {
+	private long[] theArray; // ref to array theArray
+	private int nElems; // number of data items
+	// -----------------------------------------------------------
+
+	public DArray(int max) // constructor
+	{
+		theArray = new long[max]; // create array
+		nElems = 0;
+	}
+
+	// -----------------------------------------------------------
+	public void insert(long value) // put element into array
+	{
+		theArray[nElems] = value; // insert it
+		nElems++; // increment size
+	}
+
+	// -----------------------------------------------------------
+	@Override
+	public String toString() // displays array contents
+	{
+		StringBuilder sb = new StringBuilder();
+		for (int j = 0; j < nElems; j++) // for each element,
+			sb.append(theArray[j] + " "); // display it
+		return sb.toString();
+	}
+
+	// -----------------------------------------------------------
+	public void mergeSort3Way() // called by main()
+	{
+
+		long[] workspace = new long[nElems];
+
+		for (int i = 0; i < nElems; i++) {
+			workspace[i] = theArray[i];
+		}
+
+		recMergeSort3Way(workspace, 0, nElems - 1);
+
+	}
+
+	// -----------------------------------------------------------
+	private void recMergeSort3Way(long[] workSpace, int low, int high) {
+		// YOUR CODES
+
+		// need length
+		int length = high - low + 1;
+
+		// base case
+		if (length <= 1)
+			return; // accounts for prior conquer aspect of the mergesort, at
+					// this point its already sorted
+
+		// we need midpoint to divide our arrays
+		int mid1 = low + (high - low) / 3;
+		int mid2 = low + 2 * (high - low + 1) / 3;
+
+		recMergeSort3Way(workSpace, low, mid1);
+		recMergeSort3Way(workSpace, mid1 + 1, mid2);
+		recMergeSort3Way(workSpace, mid2 + 1, high);
+
+		// after this recursive call is over it is assumed that it is already
+		// splitted and sorted(?). So we don't have to worry about it anymore
+		merge(workSpace, low, mid1, mid2, high);
+
+		System.arraycopy(workSpace, low, theArray, low, high - low + 1);
+
+		System.out.println(Arrays.toString(theArray));
+
+	}
+	// -----------------------------------------------------------
+
+	private void merge(long[] workSpace, int low, int mid1, int mid2, int high) {
+		// YOUR CODES
+
+		long[] secondworkSpace = new long[high];
+
+		int i = low;
+		int j = mid1;
+		int k = mid2;
+		int ii = low;
+
+		while (i < mid1 && j < mid2 && k < high) {
+			if (workSpace[i] < workSpace[j]) {
+				if (workSpace[i] < workSpace[k]) {
+					secondworkSpace[ii] = workSpace[i];
+					ii++;
+					i++;
+				} else {
+					secondworkSpace[ii] = workSpace[k];
+					ii++;
+					k++;
+
+				}
+
+			} else {
+				if (workSpace[j] < workSpace[k]) {
+					secondworkSpace[ii] = workSpace[j];
+					ii++;
+					j++;
+				} else {
+					secondworkSpace[ii] = workSpace[k];
+					ii++;
+					k++;
+				}
+			}
+		}
+
+		while (i < mid1 && j < mid2) {
+			if (workSpace[i] < workSpace[j]) {
+				secondworkSpace[ii] = workSpace[i];
+				ii++;
+				i++;
+			} else {
+				secondworkSpace[ii] = workSpace[j];
+				ii++;
+				j++;
+			}
+		}
+
+		while (j < mid2 && k < high) {
+			if (workSpace[j] < workSpace[k]) {
+				secondworkSpace[ii] = workSpace[j];
+				ii++;
+				j++;
+			} else {
+				secondworkSpace[ii] = workSpace[k];
+				ii++;
+				k++;
+			}
+		}
+
+		while (i < mid1 && k < high) {
+			if (workSpace[i] < workSpace[k]) {
+				secondworkSpace[ii] = workSpace[i];
+				ii++;
+				i++;
+			} else {
+				secondworkSpace[ii] = workSpace[k];
+				ii++;
+				k++;
+			}
+		}
+
+		while (i < mid1) {
+			secondworkSpace[ii] = workSpace[i];
+			ii++;
+			i++;
+		}
+		while (j < mid2) {
+			secondworkSpace[ii] = workSpace[j];
+			ii++;
+			j++;
+		}
+		while (k < high) {
+			secondworkSpace[ii] = workSpace[k];
+			ii++;
+			k++;
+		}
+
+		for (int pp = 0; pp < high; pp++) {
+			workSpace[pp] = secondworkSpace[pp];
+		}
+
+	}
+	// -----------------------------------------------------------
+
+	public void writeToFile(String filename) throws FileNotFoundException {
+
+		try {
+			int j = 0;
+			PrintWriter file = new PrintWriter(filename);
+
+			while (j < nElems) {
+
+				file.write(Long.toString(theArray[j]) + "\n");
+				j++;
+
+			}
+			file.close();
+		}
+
+		catch (IOException e) {
+
+			System.out.println("The input has something wrong with it");
+
+		}
+
+	}
+} // end class DArray
+	////////////////////////////////////////////////////////////////
+
+public class MergeSort3Way {
+	public static void main(String[] args) {
+
+		int maxSize = 1000001;
+		DArray arr = new DArray(maxSize);
+
+		arr.mergeSort3Way();
+
+		try {
+			//FileReader file = new FileReader("/Users/iamvan/Desktop/largeW.txt");
+			FileReader file = new FileReader("largeW.txt");
+			BufferedReader reads = new BufferedReader(file);
+
+			String s = reads.readLine();
+
+			while (s != null) {
+				arr.insert(Long.parseLong(s.trim()));
+				s = reads.readLine();
+			}
+
+			reads.close();
+
+			System.out.println("p");
+
+			arr.mergeSort3Way();
+
+			System.out.println("p");
+
+		} catch (FileNotFoundException e) {
+
+			System.out.println("No file exists");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			//arr.writeToFile("/Users/iamvan/Desktop/largeWResults.txt");
+			arr.writeToFile("largeWResults.txt");
+		} catch (FileNotFoundException e) {
+			System.out.println("I don't see any file!");
+		}
+
+		// Read data from the file. Please add the try/catch statement for file
+		// processing
+		// Invoke MergeSort3Way
+		// write sorted data to File.
+	}
+}
