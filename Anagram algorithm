@@ -1,0 +1,57 @@
+
+import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
+
+public class Anagrams {
+	public static ArrayList<ArrayList<String>> groupAnagrams(String[] input) {
+		
+		int counter=0;
+		HashMap<String,ArrayList<String>> result = new HashMap<>();
+		
+				
+
+			
+		for(int i=0; i<input.length;i++) {
+			
+			char[] p = input[i].toCharArray();
+			
+			Arrays.sort(p);
+			String sorted = String.valueOf(p);
+			//
+			
+			if(result.containsKey(sorted)) {
+				ArrayList<String> pp = result.get(sorted);
+				pp.add(input[i]);
+				result.put(sorted,pp);
+			}
+			else {
+				ArrayList<String> pp = new ArrayList<>();
+				pp.add(input[i]);
+				result.put(sorted,pp);
+				
+				counter++;
+			}
+			
+		
+			
+		}
+				
+				
+		ArrayList<ArrayList<String>> finalresult = new ArrayList<>();	
+				
+		for(ArrayList<String> anagramm : result.values()) {
+			finalresult.add(anagramm);
+		}
+				
+				
+		System.out.println("There are " + counter + " different groups");
+		return finalresult; // For compilation. You need to change it.
+	}
+
+	public static void main(String[] args) {
+		String[] input = {"eat", "tea", "tan", "ata", "nat", "bat"};
+		ArrayList<ArrayList<String>> results = groupAnagrams(input);
+		System.out.println(results);
+	}
+}
