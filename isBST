@@ -1,0 +1,300 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Iterator;
+import java.util.ArrayList;
+
+class Node {
+	public int data; // data item (key)
+	public Node left; // this node's left child
+	public Node right; // this node's right child
+
+	public Node(int data) {
+		this.data = data;
+	}
+
+	public void displayNode() // display ourself
+	{
+		System.out.print(data + " ");
+	}
+	
+	public String toString() {
+		return this.data + " ";
+	}
+} // end class Node
+
+public class BinarySearchTree implements Iterable<Node>{
+	private Node root;
+//-------------------------------------------------------------
+	public BinarySearchTree()         // constructor of the Binary Tree
+	{ this.root = null; }            // no nodes in tree yet
+	
+	public Node getRoot() {
+		return this.root;
+	}
+	
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+	
+	public void insert(int id) {
+		Node newNode = new Node(id);    // make new node
+		if(root==null)                // no node in root
+			root = newNode;
+		else {
+			Node current = root;
+			Node parent = root;
+			while (current!=null){
+				parent = current;
+				if (id<current.data){
+					current = current.left;
+				} else {
+					current = current.right;
+				}
+			}
+			if (id<parent.data) parent.left = newNode;
+			else parent.right = newNode;
+		} 
+	}  // end insert()
+	
+	/*
+	 * @param none
+	 * @return true or false indicating whether the tree is a binary search tree
+	 */
+	public boolean isBST(){
+		// YOUR CODES
+		
+		
+		
+		return isBST(root,Integer.MIN_VALUE,Integer.MAX_VALUE);  // for compilation. You need to change it.
+	}
+	
+	public boolean isBST(Node node,int minval, int maxval) {
+		
+		if(node==null) {
+			return false;
+		}
+		
+		
+		
+		
+			
+			if(node.data<=minval || node.data>=maxval) {
+				
+				return false;
+			}
+			
+			
+			if(node.left==null && node.right==null) {
+				return true;
+			}
+			
+			
+		
+		return isBST(node.left,minval,node.data-1) && isBST(node.right,node.data+1,maxval);
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	/*
+	 * @param two nodes
+	 * @return the data of the node which is the lowest common ancestor of node p and q;
+	 * @return -1 if either p or q does not exist in the tree
+	 */
+	
+	public int getLCA(Node p, Node q) {
+		
+		boolean flag=contains(root,p.data);
+		boolean flag2=contains(root,q.data);
+		
+		
+		
+		
+		if(flag==true && flag2==true) {
+		
+		return getLCA(p,q,root);
+		
+		}
+		
+		else {
+				return -1;
+		}
+	}
+	
+	public boolean contains(Node node, int val) {
+		
+		if(node==null) {
+			return false;
+		}
+		
+		if(val==node.data) {
+			return true;
+		}
+		
+		if(val<node.data) {
+			return contains(node.left,val);
+		}
+		else {
+			return contains(node.right,val);
+		}
+		
+	}
+	
+	
+	
+	public int getLCA(Node p, Node q, Node node){
+		
+		if(node==null) {
+			return 0;
+		}
+		
+		
+		
+		
+		if((p.data<node.data && q.data>node.data) || (p.data>node.data && q.data<node.data) ) {
+			
+			return node.data;
+		}
+		
+		if(p.data<node.data && q.data<node.data) {
+			return	getLCA(p,q,node.left);
+		}
+		
+		if(p.data>node.data && q.data>node.data) {
+			return getLCA(p,q,node.right);
+		}
+		
+		
+		return node.data;
+		
+		 // for compilation.
+	}
+	
+	
+	/*@return: an instance of Iterator Interface on Node.
+	 */
+	public Iterator<Node> iterator() {
+		return null;  // for compilation
+	}
+	
+	public static void main(String[] args){
+		Node root1 = new Node(2);
+		Node left1 = new Node(1);
+		Node right1 = new Node(3);
+		root1.left = left1;
+		root1.right = right1;
+		BinarySearchTree tree1 = new BinarySearchTree();
+		tree1.root = root1;
+		System.out.println("Is the first tree a valid BST?: " + tree1.isBST());
+		
+		Node root2 = new Node(5);
+		Node left2_1 = new Node(1);
+		Node right2_1 = new Node(4);
+		Node left2_2 = new Node(3);
+		Node right2_2 = new Node(6);
+		root2.left = left2_1;
+		root2.right = right2_1;
+		right2_1.left = left2_2;
+		right2_2.right = right2_2;
+		BinarySearchTree tree2 = new BinarySearchTree();
+		tree2.root = root2;
+		System.out.println("Is the second tree a valid BST?: " + tree2.isBST());
+		
+		BinarySearchTree tree3 = new BinarySearchTree();
+		int[] nodes = {6, 8, 2, 4, 0, 9, 7, 5, 3};
+		for (int n: nodes){
+			tree3.insert(n);
+		}
+		
+		// YOUR CODES to get the LCA for the following two nodes' set:
+		System.out.println("The LCA of node 2 and 8 is: " + tree3.getLCA(new Node(2), new Node(8)));
+		// node 2 and node 8
+		System.out.println("The LCA of node 0 and 3 is: " + tree3.getLCA(new Node(0), new Node(3)));
+		// node 0 and node 3
+		System.out.println("The LCA of node 2 and 10 is: " + tree3.getLCA(new Node(2), new Node(10)));
+		// node 2 and node 10
+		System.out.println("The LCA of node 1 and 3 is: " + tree3.getLCA(new Node(1), new Node(3)));
+		// node 1 and node 3
+		
+		
+		// Codes to test BSTIterator
+//		Iterator<Node> iter = tree3.iterator();
+		
+//		Node pp = new Node(2);
+//		pp.left= new Node(1);
+//		pp.right= new Node(3);
+		
+//		while (iter.hasNext()) {
+//			System.out.println(iter.next().toString());
+//		}
+//		
+		BSTIterator p = new BSTIterator(tree3.root);	
+			
+		while(p.hasNext()) {
+			System.out.print(p.next().toString()+" ");
+			
+		}
+			
+	
+	}
+}
+
+class BSTIterator implements Iterator<Integer> {
+
+	ArrayList<Integer> values = new ArrayList<Integer>();
+	int i;
+	
+	
+	
+	public void inorder(Node root) {
+		if(root==null) {
+			return;
+		}
+		inorder(root.left);
+		values.add(root.data);
+		inorder(root.right);
+	}
+	
+
+	
+	
+	public BSTIterator(Node root) {
+		i=-1;
+		inorder(root);
+	}
+	
+	
+	
+	@Override
+	public boolean hasNext() {
+		// TODO Auto-generated method stub
+		
+		if(i<values.size()-1) {
+			i++;
+		return true;
+		}
+		
+		else {
+		return false;
+		}
+		
+	}
+	
+
+	@Override
+	public Integer next() {
+		// TODO Auto-generated method stub
+		
+		return values.get(i);
+	}
+	
+	
+	
+	
+	
+	// YOUR CODES
+}
