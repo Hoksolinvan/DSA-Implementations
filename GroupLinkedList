@@ -1,0 +1,162 @@
+import java.util.Scanner;
+
+//Time complexity O(N)
+
+/*
+ * Author: Hoksolinvan Chhun
+ * Due Date: Feb, 20, 2023
+ * Purpose: This program groups a linklist by its even and odd indexes
+
+Credit: I did my work independently without help from external sources
+ */
+public class GroupLinkedList {
+	static class Link {
+		public String sData; // data item
+		public Link next; // next link in list
+
+		// -------------------------------------------------------------
+		public Link(String s) // constructor
+		{
+			sData = s; // initialize data
+			next = null;
+		}
+		
+		// -------------------------------------------------------------
+
+		public void displayLink() // display ourself
+		{
+			System.out.print("{" + sData + "} ");
+		}
+	} // end class Link
+		////////////////////////////////////////////////////////////////
+
+	static class LinkList {
+		private Link first; // ref to first link on list
+
+		// -------------------------------------------------------------
+		public LinkList() // constructor
+		{
+			first = null; // no links on list yet
+		}
+
+		// -------------------------------------------------------------
+		public boolean isEmpty() // true if list is empty
+		{
+			return (first == null);
+		}
+
+		// -------------------------------------------------------------
+		// insert at start of list
+		public void insertFirst(String s) { // make new link
+			Link newLink = new Link(s);
+			newLink.next = first; // newLink --> old first
+			first = newLink; // first --> newLink
+		}
+
+		// -------------------------------------------------------------
+		public Link deleteFirst() // delete first item
+		{ // (assumes list not empty)
+			Link temp = first; // save reference to link
+			first = first.next; // delete it: first-->old next
+			return temp; // return deleted link
+		}
+
+		// -------------------------------------------------------------
+		public void displayList() {
+			System.out.print("List (first-->last): ");
+			Link current = first; // start at beginning of list
+			while (current != null) // until end of list,
+			{
+				current.displayLink(); // print data
+				current = current.next; // move to next link
+			}
+			System.out.println("");
+		}
+		// -------------------------------------------------------------
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("List (first-->last): ");
+			Link current = first; // start at beginning of list
+			while (current != null) // until end of list,
+			{
+				sb.append("{" + current.sData + "} ");
+				current = current.next; // move to next link
+			}
+			return sb.toString();
+		}
+
+		// -------------------------------------------------------------
+		public void group() {
+			// YOUR CODES
+			
+			if(first==null || first.next==null) return;
+			
+			Link evenStart= new Link(null);
+			Link oddStart= new Link(null);
+			
+			
+			Link odd= oddStart;
+			Link even = evenStart;
+			
+			Link head= first;
+			
+			int count=1;
+			
+			while(head!=null) {
+				
+				if(count%2==1) {
+					odd.next= new Link(head.sData);
+					odd=odd.next;
+				}
+				else {
+					even.next= new Link(head.sData);
+					even=even.next;
+					
+				}
+				
+				
+				head=head.next;
+				
+				count++;
+				
+			}
+			
+			even.next=oddStart.next;
+			
+			odd.next=null;
+			
+			
+			first=evenStart.next;
+	
+		
+	
+			
+			
+			
+		}
+
+	} // end class LinkList
+		////////////////////////////////////////////////////////////////
+
+	public static void main(String[] args) {
+		LinkList theList = new LinkList(); // make new list
+
+		theList.insertFirst("a"); // insert seven items
+		theList.insertFirst("b");
+		theList.insertFirst("a");
+		theList.insertFirst("b");
+		theList.insertFirst("a");
+		theList.insertFirst("b");
+		theList.insertFirst("a");
+
+		theList.displayList(); // display list
+		System.out.println(theList.toString());
+
+		theList.group();
+
+		theList.displayList();
+		System.out.println(theList.toString());
+	} // end main()
+} // end class GroupLinkedList
